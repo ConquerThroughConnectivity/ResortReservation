@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "891819688127",
+    "project_id": "thesis-58faf",
+    "storage_bucket": "thesis-58faf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891819688127:android:6ff30a81861a6e4cd9860a",
+        "android_client_info": {
+          "package_name": "com.example.ResortReservation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "891819688127-2031r6icq0m5291fu5dt7o3fmjfohtsc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ResortReservation",
+            "certificate_hash": "8da2ba0c932bca78b6a3df7a2d13604a8fd3752e"
+          }
+        },
+        {
+          "client_id": "891819688127-tear4unmiphgrjjc9g5382difre1ngpi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZY1-mpnF1rnpWQ7hkWYF8r7AmdcsJ1VQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "891819688127-tear4unmiphgrjjc9g5382difre1ngpi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
