@@ -80,7 +80,7 @@ class ResortProfile extends StatelessWidget {
             IconButton(
                 onPressed: () async {
                   SharedPreferences pref =
-                      await SharedPreferences.getInstance();
+                  await SharedPreferences.getInstance();
                   pref.remove("resortadminfirstname");
                   pref.remove("resortadminlastname");
                   pref.remove("resortadminemail");
@@ -102,12 +102,8 @@ class ResortProfile extends StatelessWidget {
             builder: (controller) {
               
               return StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection("Resorts")
-                    .where("resortname", isEqualTo: resortname)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                     var userDocument = snapshot.data;
+                stream: FirebaseFirestore.instance.collection("Resorts").where("resortname", isEqualTo: resortname).snapshots(),
+                builder: (context, snapshot) {var userDocument = snapshot.data;
                   if (!snapshot.hasData) {
                     return Center(
                       child: Container(
@@ -117,7 +113,9 @@ class ResortProfile extends StatelessWidget {
                     );
                   }
                  else {
-                 
+
+
+
 
                     TextEditingController resortadminusername =
                         new TextEditingController(text: email);

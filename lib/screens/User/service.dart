@@ -53,7 +53,7 @@ var resortisadminlogin =false.obs;
     userpassword =pref.getString("userpassword").obs;
     userUserId =pref.getString("userUserID").obs;
     isUserlogin =pref.getBool("userisLogin").obs;
-    update();
+    
 }
 Future<void> getAdminData()async{
     adminemail =pref.getString("adminemail").obs;
@@ -63,7 +63,7 @@ Future<void> getAdminData()async{
     adminpassword =pref.getString("adminpassword").obs;
     adminUserId =pref.getString("adminUserID").obs;
     isadminlogin =pref.getBool("adminisLogin").obs;
-    update();
+    
 }
 Future<void> getResortAdminData()async{
     resortadminemail =pref.getString("resortadminemail").obs;
@@ -73,7 +73,7 @@ Future<void> getResortAdminData()async{
     resortadminUserId =pref.getString("resortadminUserID").obs;
     resortisadminlogin =pref.getBool("resortadminisLogin").obs;
     resortadminresortname =pref.getString("resortadminresortname").obs;
-    update();
+    
 }
 Future<void> removeResortAdminData()async{
     resortadminemail =("").obs;
@@ -84,7 +84,7 @@ Future<void> removeResortAdminData()async{
     resortisadminlogin =false.obs;
     resortadminresortname =("").obs;
     pref.clear();
-    update();
+    
   }
   Future<void> removeUserData()async{
     useremail =("").obs;
@@ -95,7 +95,7 @@ Future<void> removeResortAdminData()async{
     userUserId =("").obs;
     isUserlogin =false.obs;
     pref.clear();
-    update();
+   
   }
   Future<void> removeAdminData()async{
     adminemail =("").obs;
@@ -106,7 +106,7 @@ Future<void> removeResortAdminData()async{
     adminUserId =("").obs;
     isadminlogin =false.obs;
     pref.clear();
-    update();
+   
   }
   
 

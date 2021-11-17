@@ -241,7 +241,7 @@ class AdminController extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white);
       isResortLogin = false.obs;
-      update();
+      
     }
   }
   Future<void> checkDuplicate(String resortname) async {

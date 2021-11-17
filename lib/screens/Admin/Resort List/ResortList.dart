@@ -172,9 +172,12 @@ class ResortList extends StatelessWidget {
                                                     controller.db.collection("Resorts").doc(document['userID']).delete().then((value){
                                                       Get.snackbar("Resort", "Resort Delete Succefull", backgroundColor: AppColors.lighgrey, snackPosition: SnackPosition.BOTTOM);
                                                     });
-                                                    
-                                                    }, icon: Image.asset(AppIcons.removeResort))
-                                                    
+                                                    controller.db.collection("Users").where("resortName", isEqualTo: document['resortname']).get().then((value){
+                                                      for(DocumentSnapshot ds in value.docs){
+                                                       ds.reference.delete();
+                                                      }                                                           
+                                                    });
+                                                    }, icon: Image.asset(AppIcons.removeResort)),
                                                   ],
                                                 ),
                                                 SizedBox(
