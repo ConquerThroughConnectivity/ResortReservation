@@ -46,6 +46,14 @@ dependencies:
   cached_network_image: ^3.1.0
   animations: ^2.0.2
   material_floating_search_bar: ^0.3.6
+  email_validator: 2.0.1
+  anim_search_bar: ^2.0.2
+  flutter_rating_bar: ^4.0.0
+  auto_size_text: ^3.0.0
+  tab_container: ^1.2.0
+  flutter_vector_icons: ^1.0.0
+  flutter_zoom_drawer: ^2.1.2
+  wave: ^0.2.0
   
 dev_dependencies:
   flutter_test:
@@ -77,6 +85,13 @@ flutter:
     - family: SFS   
       fonts:
         - asset: lib/fonts/SFS.otf
+    - family: bomb   
+      fonts:
+        - asset: lib/fonts/bomb.ttf
+    - family: Glee   
+      fonts:
+        - asset: lib/fonts/Glee.ttf
+        
   uses-material-design: true
   assets:
     - lib/assets/

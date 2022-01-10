@@ -36,6 +36,48 @@ class AddResortAdmin extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: GetBuilder<AdminController>(
+        init: AdminController(),
+        builder: (snapshot){
+          return Padding(
+          padding: const EdgeInsets.all(15),
+          child: Container(
+              decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20), color: Colors.white),
+              child: Container(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: Color(0xFF306EFF),
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      textStyle:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    onPressed: () {
+                       if(snapshot.username.text.isEmpty || snapshot.password.text.isEmpty || snapshot.firstname.text.isEmpty  || snapshot.lastname.text.isEmpty ||snapshot.resortname.text.isEmpty){
+                        Get.showSnackbar(controller.ErrorSnackBar(message: "Empty Fields, Please Comply"));
+                       }else{
+                         snapshot.resortAdminSignup();
+                       }
+                              
+                      //  if(_formKey.currentState.validate() &&username.text.contains("resort#")){
+                      //    Get.offAndToNamed("/dashboardadmin");
+                      //  }
+                      //  }else if(_formKey.currentState.validate() &&username.text.contains("admin#")){
+                      //    Get.offAndToNamed("/home");
+                      //  }else if(_formKey.currentState.validate() &&username.text.contains("user#")){
+                      //    Get.offAndToNamed("/user");
+                      //  }
+                    },
+                    child: Text(
+                      "Save Resort",
+                      style: TextStyle(fontFamily: 'SFS', fontSize: 15),
+                    )),
+              )),
+        );
+      },),
       body: GetBuilder<AdminController>(
         init: AdminController(),
         builder: (snapshot){
@@ -183,28 +225,7 @@ class AddResortAdmin extends StatelessWidget {
                           ),
                         ),
                   SizedBox(height: 20,),
-                        Container(
-                              child: ElevatedButton(
-                               style: ElevatedButton.styleFrom(
-                                 shape: RoundedRectangleBorder(
-                                   borderRadius: BorderRadius.circular(10)
-                                 ),
-                                 primary: Color(0xFF306EFF),
-                                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                  textStyle: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                               ),
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              onPressed: (){
-                            
-                              snapshot.resortAdminSignup();
-                              }, 
-                              child: Text("Register Admin", style: TextStyle(
-                                fontFamily: 'SFS',
-                                fontSize: 15
-                              ),)),
-                            ),
+                       
                 ],
               ),
             )

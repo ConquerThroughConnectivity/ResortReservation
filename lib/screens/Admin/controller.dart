@@ -5,15 +5,12 @@ import 'package:ResortReservation/colors/icons.dart';
 import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/Profile.dart';
 import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/Reservation.dart';
 import 'package:ResortReservation/screens/Admin/view.dart';
-import 'package:ResortReservation/screens/User/StorageService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -114,9 +111,11 @@ class AdminController extends GetxController {
     }
     
   }
+
   Stream<QuerySnapshot<Object>> resortadminfields(String userID){
     return db1.collection("Resorts").where("resortname", isEqualTo: userID).snapshots();
   }
+
   Future<void> addResort() async {
     isSaved = true.obs;
     update();
@@ -212,7 +211,7 @@ class AdminController extends GetxController {
         'email': username.text,
         'password': password.text,
         'firstname': firstname.text,
-        'lastname': firstname.text,
+        'lastname': lastname.text,
         'tags': "resortadmin#",
         // 'photo':urlDownload,
         'resortName': resortname.text,
@@ -464,5 +463,36 @@ class AdminController extends GetxController {
           backgroundColor: Colors.black,
           colorText: Colors.white);
     }
+  }
+   GetBar ErrorSnackBar({String title = 'Error', String message}) {
+    Get.log("[$title] $message", isError: true);
+    return GetBar(
+      // titleText: Text(title.tr, style: Get.textTheme.headline6.merge(TextStyle(color: Get.theme.primaryColor, fontSize:15))),
+      messageText: Text(message, style: Get.textTheme.caption.merge(TextStyle(color: Colors.white, fontSize:15))),
+      snackPosition: SnackPosition.TOP,
+      margin: EdgeInsets.all(20),
+      backgroundColor: Colors.redAccent,
+      icon: Icon(Icons.remove_circle_outline, size: 32, color: Colors.white),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      dismissDirection: SnackDismissDirection.HORIZONTAL,
+      borderRadius: 8,
+      duration: Duration(seconds: 5),
+    );
+  }
+
+   GetBar SuccessSnackBar({String title = 'Success', String message}) {
+    Get.log("[$title] $message");
+    return GetBar(
+      titleText: Text(title.tr, style: Get.textTheme.headline6.merge(TextStyle(color: Colors.white, fontSize:15))),
+      messageText: Text(message, style: Get.textTheme.caption.merge(TextStyle(color: Colors.white, fontSize:15))),
+      snackPosition: SnackPosition.TOP,
+      margin: EdgeInsets.all(20),
+      backgroundColor: Colors.green,
+      icon: Icon(Icons.check_circle_outline, size: 32, color: Colors.white),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      borderRadius: 8,
+      dismissDirection: SnackDismissDirection.HORIZONTAL,
+      duration: Duration(seconds: 5),
+    );
   }
 }

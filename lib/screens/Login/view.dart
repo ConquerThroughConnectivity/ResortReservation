@@ -1,6 +1,7 @@
 import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/colors/icons.dart';
 import 'package:ResortReservation/screens/Login/controller.dart';
+import 'package:ResortReservation/screens/Login/wave.dart';
 import 'package:ResortReservation/screens/User/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -116,7 +117,7 @@ class Login extends StatelessWidget {
                              shape: RoundedRectangleBorder(
                                borderRadius: BorderRadius.circular(10)
                              ),
-                             primary: Color(0xFF306EFF),
+                             primary: AppColors.cardDarkBlue,
                               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                               textStyle: TextStyle(
                               fontSize: 25,
@@ -143,10 +144,8 @@ class Login extends StatelessWidget {
                         )
                       ),
                       SizedBox(height: 50,),
-                      Align(
-                        alignment: Alignment.center,
-                        child:Container(
-                      
+                    Container(
+                          padding: EdgeInsets.only(left: 50),
                           child: Row(
                             children: [
                               Text('Do you have an account?', style: TextStyle(
@@ -162,15 +161,24 @@ class Login extends StatelessWidget {
                                 child: Text('Signup', style: TextStyle(
                                   fontFamily: 'SFS',
                                   fontSize: 15,
-                                  color: Color(0xFF306EFF)
+                                  color:AppColors.cardDarkBlue
                                 ),),
                               ),
                             ],
                           )
-                        )
-                      )
+                        ),
+                    
+                    
                   ],
                 ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                   height: 800,
+                    width: double.infinity,
+                    child: AnimationWaveTrial(),
               ),
             )
         ],),

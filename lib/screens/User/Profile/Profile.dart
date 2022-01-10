@@ -42,21 +42,7 @@ class UserProfile extends StatelessWidget {
           fontSize: 20,
           color: Colors.black87
         ),),
-        actions: [
-          IconButton(onPressed: ()async{
-            SharedPreferences pref = await SharedPreferences.getInstance();
-            pref.remove("userfirstname");
-            pref.remove("userlastname");
-            pref.remove("useremail");
-            pref.remove("userphoto");
-            pref.remove("userpassword");
-            pref.remove("userUserID");
-            pref.remove("userisLogin");
-            pref.clear();
-            Get.offAndToNamed('/login');
-     
-          }, icon: Icon(Icons.logout_outlined, color: Colors.black,)),
-        ],
+       
       ),
       body: SingleChildScrollView(
         child:Form(

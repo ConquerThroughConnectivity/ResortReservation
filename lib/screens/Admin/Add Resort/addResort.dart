@@ -34,6 +34,43 @@ import 'package:textfield_tags/textfield_tags.dart';
     
         title: Text('Add Resort', style: TextStyle(fontFamily: 'SFS', color: Colors.black87, fontSize: 20),),
       ),
+      bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Container(
+              decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20), color: Colors.white),
+              child: Container(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: Color(0xFF306EFF),
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      textStyle:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    onPressed: () {
+                        if(_formKey.currentState.validate() && controller.resorttype.text.isNotEmpty && controller.images.isNotEmpty){
+                                  controller.checkDuplicate(controller.resortname.text);
+                                  // Get.toNamed("/home");
+                               }
+                              
+                      //  if(_formKey.currentState.validate() &&username.text.contains("resort#")){
+                      //    Get.offAndToNamed("/dashboardadmin");
+                      //  }
+                      //  }else if(_formKey.currentState.validate() &&username.text.contains("admin#")){
+                      //    Get.offAndToNamed("/home");
+                      //  }else if(_formKey.currentState.validate() &&username.text.contains("user#")){
+                      //    Get.offAndToNamed("/user");
+                      //  }
+                    },
+                    child: Text(
+                      "Save Resort",
+                      style: TextStyle(fontFamily: 'SFS', fontSize: 15),
+                    )),
+              )),
+        ),
       body: GetBuilder<AdminController>(
         init: AdminController(),
         builder: (snapshot){
@@ -342,32 +379,7 @@ import 'package:textfield_tags/textfield_tags.dart';
                           );
                           }),
                           SizedBox(height: 50,),
-                          Container(
-                              child: ElevatedButton(
-                               style: ElevatedButton.styleFrom(
-                                 shape: RoundedRectangleBorder(
-                                   borderRadius: BorderRadius.circular(10)
-                                 ),
-                                 primary: Color(0xFF306EFF),
-                                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                  textStyle: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold),
-                               ),
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              onPressed: (){
-
-                               if(_formKey.currentState.validate() && controller.resorttype.text.isNotEmpty && controller.images.isNotEmpty){
-                                  controller.checkDuplicate(controller.resortname.text);
-                                  // Get.toNamed("/home");
-                               }
-                              
-                              }, 
-                              child: Text("Save Resort", style: TextStyle(
-                                fontFamily: 'SFS',
-                                fontSize: 15
-                              ),)),
-                            ),
+                          
                             SizedBox(height: 40),
                     ],
                 ),

@@ -62,16 +62,11 @@ class ResortAdminList extends StatelessWidget {
                                   ),
                                 );
                               } else {
-                                return Container(
-                                    height: MediaQuery.of(context).size.height /
-                                            2 *
-                                            2 -
-                                        150,
+                                return Container(height: MediaQuery.of(context).size.height /2 *2 -150,
                                     child: ListView.builder(
                                         itemCount: snapshot.data.docs.length,
                                         itemBuilder: (context, index) {
                                           DocumentSnapshot document =snapshot.data.docs[index];
-                                          
                                           return Container(
                                             margin: EdgeInsets.all(20),
                                             padding: EdgeInsets.all(30),
@@ -97,8 +92,8 @@ class ResortAdminList extends StatelessWidget {
                                                     SizedBox(width: 10,),
                                                      Row(
                                                         children: [
-                                                          SizedBox(width: 10,),
-                                                          Text(
+                                                        SizedBox(width: 10,),
+                                                        Text(
                                                          document['email'],
                                                           style: TextStyle(
                                                             fontFamily: 'SFS',

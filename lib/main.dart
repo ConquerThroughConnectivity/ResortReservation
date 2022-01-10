@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       title: 'EasyShore',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
+    
       home: Cypher(),
       getPages: [
         GetPage(name:'/login', 

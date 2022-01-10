@@ -27,9 +27,12 @@ class Cypher extends StatelessWidget {
             return Home();
           }if(snapshot.resortisadminlogin.value ==true){
             return ResortAdminHome();
+          }if(snapshot.resortisadminlogin.value ==false){
+            return Login();
           }else{
             return Login();
           }
+                                
         },)
     );
   }
