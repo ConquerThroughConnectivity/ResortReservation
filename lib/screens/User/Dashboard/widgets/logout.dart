@@ -64,7 +64,10 @@ class LogoutConfirmation extends StatelessWidget {
             color: Colors.white,
             text: Text(
               "Confirm".tr,
-              style: Get.textTheme.headline6.merge(TextStyle(color: Colors.black)),
+              style: Get.textTheme.headline6.merge(TextStyle(
+                fontFamily: 'SFS',
+                fontSize: 18,
+                color: Colors.black)),
             ),
           ).paddingSymmetric(vertical: 30, horizontal: 20),
         ],

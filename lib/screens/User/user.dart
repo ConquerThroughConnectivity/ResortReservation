@@ -1,4 +1,5 @@
 import 'package:ResortReservation/colors/colors.dart';
+import 'package:ResortReservation/screens/Login/view.dart';
 import 'package:ResortReservation/screens/User/Dashboard/Dashboard.dart';
 import 'package:ResortReservation/screens/User/Dashboard/widgets/menu.dart';
 import 'package:ResortReservation/screens/User/Profile/Profile.dart';
@@ -31,7 +32,9 @@ class User extends StatelessWidget {
             context,
             controller: _controller,
             screens: [
-              Dashboard(),
+              Dashboard(
+                controller.userUserId.value,
+              ),
               UserProfile(
                 userID: controller.userUserId.value,
                 phototext: controller.userphoto.value,

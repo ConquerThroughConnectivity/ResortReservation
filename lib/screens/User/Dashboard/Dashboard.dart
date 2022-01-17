@@ -1,6 +1,7 @@
 import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/colors/icons.dart';
 import 'package:ResortReservation/screens/User/Dashboard/Beach.dart';
+import 'package:ResortReservation/screens/User/Dashboard/Bookings.dart';
 import 'package:ResortReservation/screens/User/Dashboard/Pool.dart';
 import 'package:ResortReservation/screens/User/Dashboard/controller.dart';
 import 'package:ResortReservation/screens/User/Dashboard/widgets/logout.dart';
@@ -14,7 +15,10 @@ import 'package:wave/wave.dart';
 
 
 class Dashboard extends GetView<UserController> {
-  final GlobalKey<ScaffoldState> _key = GlobalKey(); 
+  final String userID;
+
+  Dashboard(this.userID);
+   final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +26,6 @@ class Dashboard extends GetView<UserController> {
       child:Scaffold(
         key: _key,
         drawer:Drawer(
-        
         elevation: 5.0,
         child: Container(
           color: AppColors.background,
@@ -61,9 +64,9 @@ class Dashboard extends GetView<UserController> {
             ),
                DrawerLinkWidget(
               icon: Icons.book_rounded,
-              text: "Completed Bookings",
+              text: "My Bookings",
               onTap: (e) async {
-                
+               Get.to(()=>Booking());
               },
             ),
              DrawerLinkWidget(
@@ -131,10 +134,10 @@ class Dashboard extends GetView<UserController> {
           },
             color: AppColors.cardLightMaroon,
             tabEdge: TabEdge.top,    
-            radius: 10,
+            radius: 20,
             children: [     
-              Beach(),
-              Pool()
+              Beach(userID: userID,),
+              Pool(userID: userID,),
             ], 
            
            tabs: <Widget>[

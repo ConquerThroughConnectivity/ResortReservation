@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Pool extends StatelessWidget {
+    final String userID;
 
+  const Pool({Key key, this.userID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,11 @@ class Pool extends StatelessWidget {
                                 String type = document['resorttype'].toString();
                                 if(type.contains("Pool")){
                                 return CardWidget(
+                                userID: userID,
+                                contact: document['resortcontact'],
+                                type: document['resorttype'],
+                                details: document['resortdetails'], 
+                                resortID: document['userID'],
                                 photos: photo,  
                                 photoUrl: document['resortphoto'][0], 
                                 resortname: document['resortname'], 

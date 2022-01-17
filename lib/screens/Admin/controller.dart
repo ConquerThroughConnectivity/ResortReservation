@@ -46,6 +46,7 @@ class AdminController extends GetxController {
   TextEditingController title = new TextEditingController();
   TextEditingController description = new TextEditingController();
   TextEditingController price = new TextEditingController();
+  TextEditingController quantity = new TextEditingController();
 
   TextEditingController resortname = new TextEditingController();
   TextEditingController resortaddress = new TextEditingController();
@@ -82,6 +83,7 @@ class AdminController extends GetxController {
       'textStyle': TextStyle(color: Colors.black54),
     },
   ];
+
   void pickImages() async {
     try {
       final selectedImage = await ImagePicker().pickMultiImage();
@@ -288,7 +290,7 @@ class AdminController extends GetxController {
     Widget okButton = TextButton(
       child: Text("Save"),
       onPressed: () {
-        String concat ="\n Title: ${title.text} \n Description: ${description.text} \n Price: ${price.text}";
+        String concat ="\n Title: ${title.text} \n Description: ${description.text} \n Price: ${price.text} \n Quantity: ${quantity.text}";
         List<String> add = [concat];
        
         amenities.addAll(add);
@@ -296,6 +298,7 @@ class AdminController extends GetxController {
           "Title": title.text,
           "Description": description.text,
           "Price": price.text,
+          "Quantity":quantity.text,
         };
 
         amendamenties.add(classics);
@@ -327,14 +330,14 @@ class AdminController extends GetxController {
         ),
       ),
       content: Container(
-        height: 350,
+        height: 600,
         child: Column(
           children: [
             Card(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                 elevation: 3.0,
                 child: TextFormField(
-                    autofocus: true,
+                  
                     maxLines: 2,
                     validator: (val) {
                       if (val.isEmpty) {
@@ -361,7 +364,7 @@ class AdminController extends GetxController {
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 elevation: 3.0,
                 child: TextFormField(
-                    autofocus: true,
+                   
                     maxLines: 5,
                     validator: (val) {
                       if (val.isEmpty) {
@@ -389,7 +392,7 @@ class AdminController extends GetxController {
                 elevation: 3.0,
                 child: TextFormField(
                     keyboardType: TextInputType.number,
-                    autofocus: true,
+                   
                     maxLines: 1,
                     validator: (val) {
                       if (val.isEmpty) {
@@ -409,6 +412,37 @@ class AdminController extends GetxController {
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
                     ))),
+                    SizedBox(height: 20,),
+                Expanded(
+                  
+                  child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  elevation: 3.0,
+                  child: TextFormField(
+                      keyboardType: TextInputType.number,
+                   
+                      maxLines: 1,
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return "Cannot Be Empty";
+                        }
+                      },
+                      controller: quantity,
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                        labelText: "Quantity",
+                        icon: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.production_quantity_limits,
+                              color: Colors.blue),
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                      ))),
+                ),
+                    SizedBox(height: 20,),
           ],
         ),
       ),

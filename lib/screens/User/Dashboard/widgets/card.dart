@@ -2,11 +2,14 @@
  * Copyright (c) 2020 .
  */
 import 'package:ResortReservation/colors/colors.dart';
+import 'package:ResortReservation/colors/icons.dart';
 import 'package:ResortReservation/screens/User/Dashboard/ResortDetails.dart';
+import 'package:ResortReservation/screens/User/Dashboard/controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 
 class CardWidget extends StatelessWidget {
@@ -19,7 +22,7 @@ class CardWidget extends StatelessWidget {
     this.resortaddres,
     this.resortfee,
     this.len, this.amenties, 
-    this.photos,
+    this.photos, this.resortID, this.details, this.contact, this.type, this.userID,
   }) : super(key: key);
 
   final photoUrl;
@@ -31,18 +34,47 @@ class CardWidget extends StatelessWidget {
   final int len;
   final List<dynamic> amenties;
   final List<dynamic> photos;
+  final String resortID;
+  final String userID;
+  final String details;
+  final String contact;
+  final String type;
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GetBuilder<UserController>(
+      init: UserController(),
+      builder: (snapshots){
+      snapshots.getReview(resortID: resortID);
+    //   double total =0.0;
+    //  for(int z=0;z<snapshots.addReviews.length;z++){
+    //    print(snapshots.addReviews.length);
+    //    total =(total + double.parse(snapshots.addReviews[z]['Rating']) /5);
+    //  }
+        return InkWell(
       onTap: (){
-        Get.to(()=>ResortDetails(photos));
+        
+
+        Get.to(()=>ResortDetails(
+          photos, 
+          resortname, 
+          resortaddres,
+          resortfee,
+          resortID,
+          details,
+          contact,
+          type,
+          amenties,
+          userID,
+          ));
+       
       },
       child: Container(
         child: Hero(
           tag: "Card",
           child: Container(
             width: double.infinity,
-            height: 300,
+            height: 350,
             padding: EdgeInsets.only(top: 20, bottom: 14, left: 20, right: 20),
             margin: EdgeInsets.only(
                 left: 20, right: 20, top: topMargin, bottom: bottomMargin),
@@ -87,6 +119,7 @@ class CardWidget extends StatelessWidget {
                       child: Text(
                         resortaddres,
                         style: TextStyle(
+                          decoration: TextDecoration.none,
                           fontFamily: "Glee",
                           fontSize: 15,
                         ),
@@ -100,6 +133,7 @@ class CardWidget extends StatelessWidget {
                       child: Text(
                         "Fee: $resortfee",
                         style: TextStyle(
+                          decoration: TextDecoration.none,
                           fontFamily: "Glee",
                           fontSize: 15,
                         ),
@@ -110,6 +144,7 @@ class CardWidget extends StatelessWidget {
                 Center(
                   child: Container(
                     child: Text("Amenties", style: TextStyle(
+                      decoration: TextDecoration.none,
                       fontFamily: "glee",
                       fontSize: 15
                     ),),
@@ -125,7 +160,7 @@ class CardWidget extends StatelessWidget {
                           padding: EdgeInsets.all(5),
                           margin: EdgeInsets.all(10),
                           decoration: BoxDecoration(color: AppColors.lighgrey,borderRadius: BorderRadius.circular(10)),
-                          child: Text(" \n Title: ${amenties[index]['Title']} \n Description: ${amenties[index]['Description']} \n Price: ${amenties[index]['Price']}",
+                          child: Text(" \n Title: ${amenties[index]['Title']} \n Description: ${amenties[index]['Description']} \n Price: ${amenties[index]['Price']} \n Availability: ${amenties[index]['Quantity']}",
                             style: TextStyle(
                             fontFamily: 'SFS',
                             fontWeight: FontWeight.bold,
@@ -139,8 +174,10 @@ class CardWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: RatingBar.builder(
+                      glow: true,
                       initialRating: 3,
-                      minRating: 1,
+                      ignoreGestures: true,
+                      minRating: 0,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
@@ -155,9 +192,73 @@ class CardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-    
-    
-    
+               Container(
+                  padding: EdgeInsets.only(left: 75, top: 10),
+                  child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Center(
+                        child: GestureDetector(
+                          onTap: (){
+                            showDialog(
+                            context: context,
+                            barrierDismissible: true, // set to false if you want to force a rating
+                            builder: (context){
+                              return RatingDialog(
+                              initialRating: 1.0,
+                              // your app's name?
+                              title: Text(
+                                'Rate This Resort',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              message: Text(
+                                'Tap a star to set your rating. Add more description here if you want.',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                              // your app's logo?
+                              image: Container(
+                               
+                                child: Image.asset(AppIcons.icon2, fit: BoxFit.cover,)),
+                              submitButtonText: 'Submit',
+                              commentHint: 'Leave a simple review on this resort thank you',
+                              onCancelled: () => print('cancelled'),
+                              onSubmitted: (response) {
+                                print(resortID);
+                                snapshots.review(
+                                  userID: userID,
+                                  comment: response.comment,
+                                  rating: response.rating.toString(),
+                                  resortID: resortID
+                                );
+                                print('rating: ${response.rating}, comment: ${response.comment}');
+                                
+                                
+                              },
+                            );
+                            },
+                          );
+                          },
+                          child: Container(
+                            child: Text("Write Review", style: TextStyle(
+                              fontFamily: 'glee',
+                            
+                              fontSize: 15,
+                            )),
+                          ),
+                        ),
+                      ),
+                      IconButton(onPressed: (){
+                        print("object");
+                      }, icon: Icon(Icons.share, color: Colors.black)),
+                      SizedBox(width: 20,),
+                    ],
+                  ),
+                )
     
               ],
             ),
@@ -165,6 +266,7 @@ class CardWidget extends StatelessWidget {
         ),
       ),
     );
+    });
   }
 
   BorderRadius get buildBorderRadius {

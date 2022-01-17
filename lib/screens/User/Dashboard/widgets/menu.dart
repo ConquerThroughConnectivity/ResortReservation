@@ -2,6 +2,7 @@
  * Copyright (c) 2020 .
  */
 
+import 'package:ResortReservation/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,7 +29,7 @@ class DrawerLinkWidget extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: Get.theme.focusColor.withOpacity(1),
+              color: AppColors.cardDarkBlue,
             ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 12),
@@ -37,7 +38,13 @@ class DrawerLinkWidget extends StatelessWidget {
               color: Get.theme.focusColor.withOpacity(0.2),
             ),
             Expanded(
-              child: Text(text.tr, style: Get.textTheme.bodyText2.merge(TextStyle(fontSize: 15))),
+              child: Text(text.tr, style: Get.textTheme.bodyText2.merge(
+                TextStyle(
+                  fontSize: 13,
+                  fontFamily: "glee",
+                  color: Colors.black45,
+                  
+                  ))),
             ),
           ],
         ),

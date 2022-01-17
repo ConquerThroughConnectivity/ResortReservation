@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Beach extends StatelessWidget {
+  final String userID;
+
+  const Beach({Key key, this.userID}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +38,6 @@ class Beach extends StatelessWidget {
                   //                     // onChanged: (val){
                   //                     // dashboard.resultPool(val);
                   //                     // },
-                                      
                   //                     decoration: InputDecoration(
                   //                       contentPadding: EdgeInsets.symmetric(horizontal: 10),
                   //                       labelText: "Search Beach",
@@ -74,19 +77,19 @@ class Beach extends StatelessWidget {
                                 amenties.forEach((val){
                                   amenty.add(val);
                                 });
-
                                 List<dynamic> resortphoto =document['resortphoto'];
                                 List<dynamic> photo =[];
                                 resortphoto.forEach((val){
                                   photo.add(val);
                                 });
-                                
-                        
-
                                 String type = document['resorttype'].toString();
-
                                 if(type.contains("Beach")){
                                 return CardWidget(
+                                userID: userID,
+                                contact: document['resortcontact'],
+                                type: document['resorttype'],
+                                details: document['resortdetails'], 
+                                resortID: document['userID'],
                                 photos: photo,
                                 photoUrl: document['resortphoto'][0], 
                                 resortname: document['resortname'], 

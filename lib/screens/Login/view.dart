@@ -89,7 +89,6 @@ class Login extends StatelessWidget {
                             controller: password,
                             obscureText: true,
                             decoration: InputDecoration(
-                            
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
                           labelStyle: TextStyle(
@@ -110,9 +109,7 @@ class Login extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child:Container(
-                      
                           child: ElevatedButton(
-                            
                            style: ElevatedButton.styleFrom(
                              shape: RoundedRectangleBorder(
                                borderRadius: BorderRadius.circular(10)
@@ -144,7 +141,7 @@ class Login extends StatelessWidget {
                         )
                       ),
                       SizedBox(height: 50,),
-                    Container(
+                      Container(
                           padding: EdgeInsets.only(left: 50),
                           child: Row(
                             children: [
@@ -176,7 +173,7 @@ class Login extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                   height: 800,
+                    height: 800,
                     width: double.infinity,
                     child: AnimationWaveTrial(),
               ),
