@@ -91,7 +91,7 @@ class ResortDetails extends GetView<UserController> {
                         margin: EdgeInsets.all(20),
                         snackPosition: SnackPosition.TOP, colorText: Colors.white);
                       }else{
-                        snapshots.book(userID, snapshots.amentiesAdd, snapshots.total.value.toString(), resortID);
+                        snapshots.book(userID, snapshots.amentiesAdd, snapshots.total.value.toString(), resortID, resortname, details);
                       }
                     
                     },

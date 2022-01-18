@@ -39,7 +39,10 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
     
       home: EasySplashScreen(
-      loadingText: Text("Loading..."),
+      loadingText: Text("Loading...", style: TextStyle(
+        fontFamily: 'sfs',
+        fontSize: 15,
+      ),),
       logo: Image.asset(AppIcons.icon2, scale: 5.0,),
       title: Text("Welcome to EasyShore", style: TextStyle(
           fontFamily: 'glee',

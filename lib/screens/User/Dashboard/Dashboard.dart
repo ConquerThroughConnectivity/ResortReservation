@@ -16,7 +16,7 @@ import 'package:wave/wave.dart';
 
 class Dashboard extends GetView<UserController> {
   final String userID;
-
+  
   Dashboard(this.userID);
    final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
@@ -66,7 +66,7 @@ class Dashboard extends GetView<UserController> {
               icon: Icons.book_rounded,
               text: "My Bookings",
               onTap: (e) async {
-               Get.to(()=>Booking());
+               Get.to(()=>Booking(userID: userID,));
               },
             ),
              DrawerLinkWidget(

@@ -59,6 +59,9 @@ addAmenties(String value){
 Stream<QuerySnapshot<Object>> mybookings(String userID){
   return db.collection("Reservation").where("userID", isEqualTo: userID).snapshots();
 }
+Stream<QuerySnapshot<Object>> getResort(String resortID){
+  return db.collection("Resorts").where("resortID", isEqualTo: resortID).snapshots();
+}
 
 updateFields({String email, String firstname, String lastname, String password, String userID}){
   isUpdateProfile =true.obs;
@@ -93,7 +96,7 @@ updateFields({String email, String firstname, String lastname, String password, 
 
 
 
-Future<void> book(String userID, List<dynamic> amenties,String total, String resortID) async {
+Future<void> book(String userID, List<dynamic> amenties,String total, String resortID, String resortname, String resortdetails) async {
     isLoad =true.obs;
     update();
       final collRef = FirebaseFirestore.instance.collection('Reservation');
@@ -105,6 +108,8 @@ Future<void> book(String userID, List<dynamic> amenties,String total, String res
         'userID':userID,      
         'reservationID':users.id,
         'resortID':resortID,
+        'resortname':resortname,
+        'resortdetails':resortdetails,
         'Confirmation':false,
       })).then((value){
           Get.snackbar("Success", "Booking Success", backgroundColor: AppColors.green, barBlur: 2.5,
