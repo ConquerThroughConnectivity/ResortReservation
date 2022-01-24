@@ -111,8 +111,10 @@ class AdminController extends GetxController {
     }else{
       return db.collection("Resorts").snapshots();
     }
-    
   }
+  
+
+
 
   Stream<QuerySnapshot<Object>> resortadminfields(String userID){
     return db1.collection("Resorts").where("resortname", isEqualTo: userID).snapshots();

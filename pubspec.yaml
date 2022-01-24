@@ -29,7 +29,7 @@ dependencies:
   persistent_bottom_nav_bar: ^4.0.2
   cupertino_icons: ^1.0.0
   flutter_app_name: ^0.1.1
-  # firebase_core: ^1.8.0
+  firebase_core: ^1.8.0
   cloud_firestore: ^2.5.3
   select_form_field: ^2.2.0
   intl_phone_field: ^2.1.0
@@ -60,8 +60,9 @@ dependencies:
   timeago: ^3.1.0
   rating_dialog: ^2.0.3
   easy_splash_screen: ^1.0.3
- 
-
+  cloud_functions: ^3.2.5
+  chat_bubbles: ^1.1.0
+  
 dev_dependencies:
   flutter_test:
   

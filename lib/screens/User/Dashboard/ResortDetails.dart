@@ -3,18 +3,14 @@ import 'dart:async';
 import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/colors/icons.dart';
 import 'package:ResortReservation/screens/User/Dashboard/controller.dart';
+import 'package:ResortReservation/screens/User/Dashboard/service/Messages.dart';
 import 'package:ResortReservation/screens/User/Dashboard/widgets/cardDescription.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:get/state_manager.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:tab_container/tab_container.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -47,6 +43,7 @@ class ResortDetails extends GetView<UserController> {
          held.add(S2Choice<String>(value: amenties[z]['Price'], title: "\n ${amenties[z]['Title'].toString()} \n ${amenties[z]['Description'].toString()} \n ${amenties[z]['Price'].toString()}")); 
       }
       final ago = new DateTime.now();
+      print(snapshots.addReviews);
       return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -62,6 +59,17 @@ class ResortDetails extends GetView<UserController> {
           fontSize: 20,
           color: Colors.black
         ),),
+        actions: [
+           IconButton(onPressed: (){
+             Get.to(()=>Messages(
+               url: photos[0],
+               userID: userID,
+               resortname: resortname,
+               resortID: resortID,
+             ));
+             }, 
+             icon: Icon(Icons.message, color: Colors.black)),
+        ],
         
       ),
       bottomNavigationBar:Padding(
@@ -76,8 +84,7 @@ class ResortDetails extends GetView<UserController> {
                           borderRadius: BorderRadius.circular(10)),
                       primary: AppColors.cardDarkBlue,
                       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      textStyle:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      textStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     onPressed: ()async{
@@ -93,7 +100,6 @@ class ResortDetails extends GetView<UserController> {
                       }else{
                         snapshots.book(userID, snapshots.amentiesAdd, snapshots.total.value.toString(), resortID, resortname, details);
                       }
-                    
                     },
                     child: Text(
                       "Book This Resort",
@@ -157,8 +163,8 @@ class ResortDetails extends GetView<UserController> {
                       ),
                     ),
                 ),
-            SizedBox(width: 5,),
-                 Container(
+                      SizedBox(width: 5,),
+                      Container(
                       padding: EdgeInsets.only(top: 15),
                       child: IconButton(onPressed:(){
       
@@ -170,7 +176,8 @@ class ResortDetails extends GetView<UserController> {
                             fontFamily: 'SFS',
                             fontSize: 15,
                            ),),
-                         )
+                         ),
+                       
                         ],
                       ),
           SizedBox(height: 20,),
@@ -194,12 +201,13 @@ class ResortDetails extends GetView<UserController> {
             tabEdge: TabEdge.top,    
             radius: 20,
             children: [  
-              //Details   //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details 
+              //Details   //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details
+              // 
                Container(
                  padding: EdgeInsets.only(top: 40),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                      Center(
                        child: Container(
                          child: Text("Additional Information", style: TextStyle(
@@ -401,7 +409,7 @@ class ResortDetails extends GetView<UserController> {
                       Container(
                         height: 500,
                         child: ListView.builder(
-                        itemCount: snapshots.addReviews.length -1,
+                        itemCount: snapshots.addReviews.length ,
                         itemBuilder: (context,index){  
                             return Container(
                               margin: EdgeInsets.all(10),

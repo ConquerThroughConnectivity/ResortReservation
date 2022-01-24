@@ -1,5 +1,7 @@
+import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/screens/Admin/controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ResortAdminController extends GetxController{
@@ -11,7 +13,66 @@ class ResortAdminController extends GetxController{
     var onLastname ="".obs;
     var onResort ="".obs;
     var onEntrance ="".obs;
+    final db = FirebaseFirestore.instance;
 
+
+  Stream<QuerySnapshot<Object>> getMessage(String userID){
+  // Query colllection =FirebaseFirestore.instance.collection("Chats").where("resortID", isEqualTo: userID).orderBy("date");
+
+  return db.collection("Chats").where("resortID", isEqualTo: userID).snapshots();
+  }
+
+
+  Stream<QuerySnapshot<Object>> getReservation(String resortID){
+  return db.collection("Reservation").where("resortname", isEqualTo: resortID).snapshots();
+  }
+
+
+
+
+ updateFields({String reservationID}){
+  var collection = FirebaseFirestore.instance.collection('Reservation');
+  collection.doc(reservationID).update(
+    {
+    'Confirmation' : true,
+    }) 
+    .then((_) {
+      Get.snackbar("Booking Confirmed", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
+          margin: EdgeInsets.all(15),
+          padding: EdgeInsets.all(20),
+          colorText: Colors.white,
+          dismissDirection: SnackDismissDirection.HORIZONTAL,
+          snackPosition: SnackPosition.TOP);
+    })
+    .catchError((error){
+   print(error);
+    });
+}
+
+  Stream<QuerySnapshot<Object>> getMessageList(String resortID){
+  return db.collection("Chats").where("", isEqualTo: resortID).snapshots();
+  }
+
+  Future<void> sendMessage({String resortID, String message}) async {
+    try {
+      final collRef = FirebaseFirestore.instance.collection('Chats');
+      DocumentReference users = collRef.doc();
+      var date =DateTime.now();
+      await users.set(({
+        'messages': message,
+        'resortID':resortID,
+        'chatID':users.id,
+        'isSender':false,
+        'isResort':true,
+        'date':date,
+      })).then((value){
+        return;
+      });
+    } catch (e) {
+     
+         
+    }
+  }
 
     updateDetails({String email, String password, String firstname, String lastname, String userID})async{
       if(email!=null || password !=null || firstname !=null || lastname !=null){

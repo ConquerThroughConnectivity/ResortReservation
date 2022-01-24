@@ -135,7 +135,7 @@ class UserProfile extends StatelessWidget {
                         iconData: Icons.alternate_email,
                         ),
                       ),
-                             Container(
+                          Container(
                           margin: EdgeInsets.all(5),
                           child: TextFieldWidget(
                           obscureText: true,

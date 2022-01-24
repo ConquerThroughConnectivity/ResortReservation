@@ -256,6 +256,7 @@ class CardWidget extends StatelessWidget {
                         print("object");
                       }, icon: Icon(Icons.share, color: Colors.black)),
                       SizedBox(width: 20,),
+                     
                     ],
                   ),
                 )

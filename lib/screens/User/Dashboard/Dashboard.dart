@@ -4,6 +4,7 @@ import 'package:ResortReservation/screens/User/Dashboard/Beach.dart';
 import 'package:ResortReservation/screens/User/Dashboard/Bookings.dart';
 import 'package:ResortReservation/screens/User/Dashboard/Pool.dart';
 import 'package:ResortReservation/screens/User/Dashboard/controller.dart';
+import 'package:ResortReservation/screens/User/Dashboard/service/MessageList.dart';
 import 'package:ResortReservation/screens/User/Dashboard/widgets/logout.dart';
 import 'package:ResortReservation/screens/User/Dashboard/widgets/menu.dart';
 import 'package:flutter/material.dart';
@@ -55,13 +56,13 @@ class Dashboard extends GetView<UserController> {
                   ),
                 )
               ),
-              DrawerLinkWidget(
-              icon: Icons.chat_outlined,
-              text: "Messages",
-              onTap: (e) async {
-                
-              },
-            ),
+            //   DrawerLinkWidget(
+            //   icon: Icons.chat_outlined,
+            //   text: "Messages",
+            //   onTap: (e) async {
+            //       Get.to(()=>MessagesList());
+            //   },
+            // ),
                DrawerLinkWidget(
               icon: Icons.book_rounded,
               text: "My Bookings",
@@ -157,7 +158,7 @@ class Dashboard extends GetView<UserController> {
               children: [
                 Text("Pool", style: TextStyle(
                   fontFamily: "glee",
-                  fontSize: 15
+                  fontSize: 15,
                 ),),
                 SizedBox(width: 10,),
                 Icon(Icons.pool_sharp),

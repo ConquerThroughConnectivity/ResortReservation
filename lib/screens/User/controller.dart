@@ -58,10 +58,16 @@ TextEditingController lastname = new TextEditingController();
       if(task ==null){
         return;
       }
+
+
+
       final snapshot =await task.whenComplete(() {
         isLogin =false.obs;
         update();
       });
+
+
+
       final urlDownload =await snapshot.ref.getDownloadURL();
       await users.set(({
         'email': email1,
@@ -70,8 +76,9 @@ TextEditingController lastname = new TextEditingController();
         'lastname':lastname1,
         'tags':"user#",
         'photo':urlDownload,
-        'userID':users.id
-      })).then((value){
+        'userID':users.id,
+        })).then((value){
+
           Get.snackbar("Success", "Email Register Sucess", backgroundColor: AppColors.cardLightMaroon, barBlur: 2.5, snackPosition: SnackPosition.BOTTOM);
           isLogin =false.obs;
           update();

@@ -1,7 +1,8 @@
 
 import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/colors/icons.dart';
-import 'package:ResortReservation/screens/User/Dashboard/service/messagecontroller.dart';
+import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/ResortAdmin.dart';
+import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/controller.dart';
 import 'package:ResortReservation/screens/User/user.dart';
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,25 +10,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class Messages extends StatelessWidget {
+class ResortMessages extends StatelessWidget {
 
- final String userID;
+
  final String resortID;
- final String resortname;
  final String url;
 
-  const Messages({Key key, this.userID, this.resortID, this.resortname, this.url}) : super(key: key);
+  const ResortMessages({Key key, this.resortID, this.url}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = new TextEditingController();
     final ago = new DateTime.now();
-    return GetBuilder<MessageController>(
-      init: MessageController(),
+    return GetBuilder<ResortAdminController>(
+      init: ResortAdminController(),
       builder: (snapshots){
       return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
-        
         height: 60,
         width: double.infinity,
         padding: EdgeInsets.all(10),
@@ -56,7 +55,7 @@ class Messages extends StatelessWidget {
                 if(controller.text ==""){
                   return;
                 }else{
-                  snapshots.sendMessage(userID, resortID, controller.text);
+                  snapshots.sendMessage(resortID: resortID, message: controller.text);
                   controller.text ="";
                 }
                 
@@ -70,44 +69,44 @@ class Messages extends StatelessWidget {
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         leading: IconButton(onPressed: (){
-          Get.to(()=>User());
+          Get.to(()=>ResortAdminHome());
         }, 
         icon: Icon(Icons.arrow_back_ios_new, color: Colors.black,)),
         title: Column(
           children: [
-          Row(
-          children: [
-          CircleAvatar(
-          foregroundColor: Colors.blue,
-          backgroundColor: Colors.white,
-          radius: 20,
-          child: ClipOval(
-            child: Image.network(
-              url,
-              fit: BoxFit.cover,
-              width: 50,
-              height: 50,
-            ),
-          )),
-          SizedBox(width: 20,),
-         Column(
-          children: [
-          Text(resortname, style: TextStyle(
-          fontFamily: 'SFS',
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-          ),),
-          Text(timeago.format(ago), style: TextStyle(
-          fontFamily: 'SFS',
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-          ),),
-           ],
-         )
-            ],
-          ),
+        //   Row(
+        //   children: [
+        //   CircleAvatar(
+        //   foregroundColor: Colors.blue,
+        //   backgroundColor: Colors.white,
+        //   radius: 20,
+        //   child: ClipOval(
+        //     child: Image.network(
+        //       url,
+        //       fit: BoxFit.cover,
+        //       width: 50,
+        //       height: 50,
+        //     ),
+        //   )),
+        //   SizedBox(width: 20,),
+        //  Column(
+        //   children: [
+        //   Text(resortname, style: TextStyle(
+        //   fontFamily: 'SFS',
+        //   color: Colors.black,
+        //   fontWeight: FontWeight.bold,
+        //   fontSize: 15,
+        //   ),),
+        //   Text(timeago.format(ago), style: TextStyle(
+        //   fontFamily: 'SFS',
+        //   color: Colors.black,
+        //   fontWeight: FontWeight.bold,
+        //   fontSize: 15,
+        //   ),),
+        //    ],
+        //  )
+        //     ],
+        //   ),
 
           ],
         )
@@ -118,7 +117,7 @@ class Messages extends StatelessWidget {
           child: Column(
             children: [
             StreamBuilder<QuerySnapshot>(
-            stream: snapshots.getMessage(userID, resortID),    
+            stream: snapshots.getMessage(resortID),    
             builder: (context, snapshot){
             if(!snapshot.hasData){
               return Center(child: Text("No Data"));
@@ -135,18 +134,18 @@ class Messages extends StatelessWidget {
                 DocumentSnapshot doc  =snapshot.data.docs[index];
                 if(doc['resortID'] ==resortID){
                   return Container(
-                  margin: EdgeInsets.all(10),
-                  alignment: Alignment.centerRight,
+                    margin: EdgeInsets.all(10),
                    child: BubbleNormal(
                     text:doc['messages'],
-                    isSender: doc['isSender'],
+                    isSender:doc['isResort'],
                     textStyle: TextStyle(
                       fontFamily: 'SFS',
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: doc['isSender'] ==false ? Colors.black : Colors.white,
+                      color: doc['isResort'] ==false ? Colors.black : Colors.white,
                     ),
-                    color:doc['isSender'] ==false ? AppColors.cardLightMaroon : AppColors.cardDarkBlue,
+                    
+                    color:doc['isResort'] ==false ? AppColors.cardLightMaroon: AppColors.cardDarkBlue ,
                     tail: true,
                     sent: true,
                 ),                  

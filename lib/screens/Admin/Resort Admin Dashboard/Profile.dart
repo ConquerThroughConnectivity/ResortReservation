@@ -35,6 +35,7 @@ class ResortProfile extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    
     // onEmail.selection =TextSelection.fromPosition(TextPosition(offset: onEmail.text.length));
     // onPassword.selection =TextSelection.fromPosition(TextPosition(offset: onPassword.text.length));
     // onFirstname.selection =TextSelection.fromPosition(TextPosition(offset: onFirstname.text.length));
@@ -92,6 +93,11 @@ class ResortProfile extends StatelessWidget {
               )),
         ),
         appBar: AppBar(
+          // leading: IconButton(
+          //    onPressed: (){
+          //   //  Get.to(()=>ResortMessagesList(resortID: resortID, userID: userID,));
+          //   Get.to(()=>ResortMessages(resortID: resortID,));
+          // }, icon: Icon(Icons.message, color: Colors.black,)),
           toolbarHeight: 100,
           elevation: 0.0,
           backgroundColor: AppColors.background,
@@ -141,7 +147,7 @@ class ResortProfile extends StatelessWidget {
                   }else{
                     var user = snapshot.data.docs;
                     // controller1.emailCheck(resortadminusername.text);
-                
+                    print(user[0]['userID']);
                     entranceFee =userDocument.docs[0]['resortentrancefee'];
                     resortID =userDocument.docs[0]['userID'];
 

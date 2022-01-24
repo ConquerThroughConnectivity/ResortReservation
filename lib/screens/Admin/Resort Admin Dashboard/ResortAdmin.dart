@@ -27,7 +27,9 @@ class ResortAdminHome extends StatelessWidget {
           context,
           controller: _controller,
           screens: [
-            ResortAdminReservation(),
+            ResortAdminReservation(
+                resortname:snapshots.resortadminresortname.value,
+            ),
             ResortProfile(
               email: snapshots.resortadminemail.value,
               firstname: snapshots.resortadminfirstname.value,
@@ -37,7 +39,8 @@ class ResortAdminHome extends StatelessWidget {
               resortname: snapshots.resortadminresortname.value,    
             ),
             ],
-          items:[PersistentBottomNavBarItem(
+          items:[
+            PersistentBottomNavBarItem(
                   icon: Icon(CupertinoIcons.home),
                   title: ("Dashboard"),
                   activeColorPrimary: CupertinoColors.activeBlue,
