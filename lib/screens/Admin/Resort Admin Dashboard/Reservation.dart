@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
-
+import 'package:intl/intl.dart';
 class ResortAdminReservation extends StatelessWidget {
  
 final String resortname;
@@ -22,6 +22,7 @@ final String resortname;
     return GetBuilder<ResortAdminController>(
       init: ResortAdminController(),
       builder: (snapshot){
+      final format = DateFormat("yyyy-MM-dd");
         return Scaffold(
       key: _key,
       drawer: Drawer(
@@ -136,9 +137,14 @@ final String resortname;
                                   amenty.add(val);
                                 });
                              if(document['Confirmation']==false){
+                              //  final date1 =DateTime.parse(document['date-from']);
+                              //  final date2 =DateTime.parse(document['date-to']);
+                              //  int finalDate=date2.difference(date1).inDays;
+                              String dateNow =format.format(DateTime.now());
+                              print(dateNow);
                                 return Container(
                                 margin: EdgeInsets.all(20),
-                                height: 280,
+                                height: 380,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -162,6 +168,7 @@ final String resortname;
                                               fontFamily: 'SFS',
                                               fontSize: 15,
                                             ),)),
+
                                           ],
                                         ),
                                       ),
@@ -192,53 +199,107 @@ final String resortname;
                                       })
                                     ),
                                      Container(
-                                              margin: EdgeInsets.only(top: 5, left: 10),
-                                              child: Text("Resort Details: ${document['resortdetails']}" ,style: TextStyle(
-                                              fontFamily: 'Glee',
-                                              fontSize: 15,
-                                            ),)),
-                                      Container(
-                                        margin: EdgeInsets.all(20),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                            child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10)
-                                              ),
-                                              primary: AppColors.cardDarkBlue,
-                                                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                                                textStyle: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold),
-                                            ),
-                                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                                            onPressed: ()async{
-                                               
-                                                Get.bottomSheet(
-                                                      Confirmation(reservationID: document['reservationID']),
-                                                      isScrollControlled: false,
-                                                    );
-                                            //  if(_formKey.currentState.validate() &&username.text.contains("resort#")){
-                                            //    Get.offAndToNamed("/dashboardadmin");
-                                            //  }
-                                            //  }else if(_formKey.currentState.validate() &&username.text.contains("admin#")){
-                                            //    Get.offAndToNamed("/home");
-                                            //  }else if(_formKey.currentState.validate() &&username.text.contains("user#")){
-                                            //    Get.offAndToNamed("/user");
-                                            //  }
-                                            }, 
-                                            child: Text("Confirm", style: TextStyle(
-                                              fontFamily: 'SFS',
-                                              fontSize: 15
-                                            ),)),
-                                            ),
-                                            
-                                          ],
-                                        ),
-                                      )      
+                                       padding: EdgeInsets.all(10),
+                                       child: Row(
+                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                         children: [
+                                           Container(
+                                                margin: EdgeInsets.only(top: 5, left: 10),
+                                                child: Text("Resort Name: ${document['resortname']}" ,style: TextStyle(
+                                                fontFamily: 'Glee',
+                                                fontSize: 15,
+                                              ),)),
+                                               Container(
+                                                margin: EdgeInsets.only(top: 5, left: 10),
+                                                child: Text("Persons : ${document['persons']}" ,style: TextStyle(
+                                                fontFamily: 'Glee',
+                                                fontSize: 15,
+                                              ),)),
+                                         ],
+                                       ),
+                                     ),
+                                     SizedBox(height: 20),
+                                     Container(
+                                       padding: EdgeInsets.all(10),
+                                       child: Row(
+                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                         children: [
+                                           Container(
+                                                margin: EdgeInsets.only(top: 5, left: 10),
+                                                child: Text("Date From: ${document['date-from']}" ,style: TextStyle(
+                                                fontFamily: 'Glee',
+                                                fontSize: 15,
+                                              ),)),
+                                               Container(
+                                                margin: EdgeInsets.only(top: 5, left: 10),
+                                                child: Text("Date To : ${document['date-to']}" ,style: TextStyle(
+                                                fontFamily: 'Glee',
+                                                fontSize: 15,
+                                              ),)),
+                                         ],
+                                       ),
+                                     ),
+                                      StreamBuilder(
+                                        stream: snapshot.getResort(resortname),
+                                        builder: (ctx, snaps){
+                                        if(!snaps.hasData){
+                                        return Center(
+                                        child: Image.asset(AppIcons.icon, fit: BoxFit.cover, scale: 20,),
+                                        );
+                                      }else{
+                                         DocumentSnapshot doc =snaps.data.docs[0];
+                                         return Container(
+                                                    margin: EdgeInsets.all(20),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Container(
+                                                        child: dateNow.contains(document['date-to']) ?
+                                                        ElevatedButton(
+                                                        
+                                                        style: ElevatedButton.styleFrom(
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(10)
+                                                          ),
+                                                          primary: AppColors.cardDarkBlue,
+                                                            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                                                            textStyle: TextStyle(
+                                                            fontSize: 25,
+                                                            fontWeight: FontWeight.bold),
+                                                        ),
+                                                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                        onPressed: ()async{
+                                                          int total=(int.parse(doc['resortlimit']) + int.parse(document['persons']));
+                                                            Get.bottomSheet(
+                                                                  Confirmation(reservationID: document['reservationID'], userID: doc['userID'], total: total.toString(),),
+                                                                  isScrollControlled: false,
+                                                          );
+                                                                
+                                                        //  if(_formKey.currentState.validate() &&username.text.contains("resort#")){
+                                                        //    Get.offAndToNamed("/dashboardadmin");
+                                                        //  }
+                                                        //  }else if(_formKey.currentState.validate() &&username.text.contains("admin#")){
+                                                        //    Get.offAndToNamed("/home");
+                                                        //  }else if(_formKey.currentState.validate() &&username.text.contains("user#")){
+                                                        //    Get.offAndToNamed("/user");
+                                                        //  }
+                                                        }, 
+                                                        child: Text("Confirm", style: TextStyle(
+                                                          fontFamily: 'SFS',
+                                                          fontSize: 15
+                                                        ),)):Text("This Date cannot be confirmed", style: TextStyle(
+                                                            fontFamily: 'Glee',
+                                                            fontSize: 15,
+                                                            
+                                                          ),),
+                                                        ),
+                                                        
+                                                      ],
+                                                    ),
+                                                  );
+                                    }
+                                       
+                                      })   
                                   
                                     ],
                                   ),

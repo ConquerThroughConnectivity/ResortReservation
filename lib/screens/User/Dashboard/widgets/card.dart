@@ -22,7 +22,7 @@ class CardWidget extends StatelessWidget {
     this.resortaddres,
     this.resortfee,
     this.len, this.amenties, 
-    this.photos, this.resortID, this.details, this.contact, this.type, this.userID,
+    this.photos, this.resortID, this.details, this.contact, this.type, this.userID, this.limitations,
   }) : super(key: key);
 
   final photoUrl;
@@ -39,13 +39,12 @@ class CardWidget extends StatelessWidget {
   final String details;
   final String contact;
   final String type;
-
+  final String limitations;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<UserController>(
       init: UserController(),
       builder: (snapshots){
-      snapshots.getReview(resortID: resortID);
     //   double total =0.0;
     //  for(int z=0;z<snapshots.addReviews.length;z++){
     //    print(snapshots.addReviews.length);
@@ -66,6 +65,7 @@ class CardWidget extends StatelessWidget {
           type,
           amenties,
           userID,
+          limitations
           ));
        
       },
@@ -74,7 +74,7 @@ class CardWidget extends StatelessWidget {
           tag: "Card",
           child: Container(
             width: double.infinity,
-            height: 350,
+            height: 380,
             padding: EdgeInsets.only(top: 20, bottom: 14, left: 20, right: 20),
             margin: EdgeInsets.only(
                 left: 20, right: 20, top: topMargin, bottom: bottomMargin),
@@ -141,6 +141,16 @@ class CardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+                 Center(
+                  child: Container(
+                    child: Text("Resort Limit: $limitations", style: TextStyle(
+                      decoration: TextDecoration.none,
+                      fontFamily: "glee",
+                      fontSize: 15
+                    ),),
+                  ),
+                ),
+                 SizedBox(height: 10,),
                 Center(
                   child: Container(
                     child: Text("Amenties", style: TextStyle(
@@ -150,6 +160,7 @@ class CardWidget extends StatelessWidget {
                     ),),
                   ),
                 ),
+               
                 Container(
                   height: 100,
                   child: ListView.builder(
@@ -157,14 +168,33 @@ class CardWidget extends StatelessWidget {
                       itemCount: amenties.length,
                       itemBuilder: (context, index) {
                         return Container(
+                          
                           padding: EdgeInsets.all(5),
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(color: AppColors.lighgrey,borderRadius: BorderRadius.circular(10)),
-                          child: Text(" \n Title: ${amenties[index]['Title']} \n Description: ${amenties[index]['Description']} \n Price: ${amenties[index]['Price']} \n Availability: ${amenties[index]['Quantity']}",
-                            style: TextStyle(
-                            fontFamily: 'SFS',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10),
+                          margin: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            image:DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              amenties[index]['Photo'],
+                            ),
+                          colorFilter: ColorFilter.mode(
+                              Colors.white12.withOpacity(0.5), BlendMode.luminosity)),
+                            color: AppColors.lighgrey,borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                            BoxShadow(
+                                color: Get.theme.focusColor.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: Offset(0, 5)),
+                          ],
+                            ),
+                          child: Center(
+                            child: Text(" \n Title: ${amenties[index]['Title']} \n Description: ${amenties[index]['Description']} \n Price: ${amenties[index]['Price']}",
+                              style: TextStyle(
+                              fontFamily: 'Glee',
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10),
+                            ),
                           ),
                         );
                       }),

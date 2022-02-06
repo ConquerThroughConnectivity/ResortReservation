@@ -96,6 +96,7 @@ class Beach extends StatelessWidget {
                                 resortaddres: document['resortaddress'], 
                                 resortfee: document['resortentrancefee'],
                                 amenties: amenties,
+                                limitations: document['resortlimit'],
                                 );
                                 }else{
                                 return Container();

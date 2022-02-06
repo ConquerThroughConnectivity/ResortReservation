@@ -5,6 +5,7 @@ import 'package:ResortReservation/screens/Admin/view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:search_choices/search_choices.dart';
 import 'package:select_form_field/select_form_field.dart';
 
 
@@ -56,7 +57,7 @@ class AddResortAdmin extends StatelessWidget {
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     onPressed: () {
-                       if(snapshot.username.text.isEmpty || snapshot.password.text.isEmpty || snapshot.firstname.text.isEmpty  || snapshot.lastname.text.isEmpty ||snapshot.resortname.text.isEmpty){
+                       if(snapshot.username.text.isEmpty || snapshot.password.text.isEmpty || snapshot.firstname.text.isEmpty  || snapshot.lastname.text.isEmpty || snapshot.resorT.value.isEmpty || snapshot.resorT.value ==null){
                         Get.showSnackbar(controller.ErrorSnackBar(message: "Empty Fields, Please Comply"));
                        }else{
                          snapshot.resortAdminSignup();
@@ -81,157 +82,179 @@ class AddResortAdmin extends StatelessWidget {
       body: GetBuilder<AdminController>(
         init: AdminController(),
         builder: (snapshot){
-        return ModalProgressHUD(
-        inAsyncCall: snapshot.isResortLogin.value,
-        color: AppColors.cardYellow,
-        progressIndicator: Image.asset(AppIcons.icon, fit: BoxFit.cover, scale:20,),
-        child: Stack(
-          children: [
-            Form(
-              
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
-                        elevation: 3.0,
-                        child: TextFormField(
-                            validator: (val) {
-                              if (val.isEmpty) {
-                                return "Cannot Be Empty";
-                              }
-                            },
-                            controller: snapshot.username,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              labelText: "Email Address",
-                              icon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.email_sharp,
-                                    color: Colors.blue),
-                              ),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ))),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
-                        elevation: 3.0,
-                        child: TextFormField(
-                           
-                            validator: (val) {
-                              if (val.isEmpty) {
-                                return "Cannot Be Empty";
-                              }
-                            },
-                            controller: snapshot.password,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              labelText: "Password",
-                              icon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.password,
-                                    color: Colors.blue),
-                              ),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ))),
-                  ),
-                   Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
-                        elevation: 3.0,
-                        child: TextFormField(
-                            
-                            validator: (val) {
-                              if (val.isEmpty) {
-                                return "Cannot Be Empty";
-                              }
-                            },
-                            controller: snapshot.firstname,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              labelText: "Firstname",
-                              icon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.people_alt,
-                                    color: Colors.blue),
-                              ),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ))),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10))),
-                        elevation: 3.0,
-                        child: TextFormField(
-                            
-                            validator: (val) {
-                              if (val.isEmpty) {
-                                return "Cannot Be Empty";
-                              }
-                            },
-                            controller: snapshot.lastname,
-                            decoration: InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              labelText: "Lastname",
-                              icon: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Icon(Icons.people_alt,
-                                    color: Colors.blue),
-                              ),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ))),
-                  ),
-                  Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Card(
-                          shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
+        return  ModalProgressHUD(
+          inAsyncCall: snapshot.isResortLogin.value,
+          color: AppColors.cardYellow,
+          progressIndicator: Image.asset(AppIcons.icon, fit: BoxFit.cover, scale:20,),
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Form(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
                             elevation: 3.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: SelectFormField(
-                              type: SelectFormFieldType.dropdown,
-                              controller: snapshot.resortname,
-                              labelText: 'Select Resort',
-                              items: controller.itemsuck,
-                              onChanged: (val){
-            
-                              },
-                              
-                          ),
-                            )
-                          ),
+                            child: TextFormField(
+                                validator: (val) {
+                                  if (val.isEmpty) {
+                                    return "Cannot Be Empty";
+                                  }
+                                },
+                                controller: snapshot.username,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10),
+                                  labelText: "Email Address",
+                                  icon: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.email_sharp,
+                                        color: Colors.blue),
+                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                ))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                            elevation: 3.0,
+                            child: TextFormField(
+                               
+                                validator: (val) {
+                                  if (val.isEmpty) {
+                                    return "Cannot Be Empty";
+                                  }
+                                },
+                                controller: snapshot.password,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10),
+                                  labelText: "Password",
+                                  icon: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.password,
+                                        color: Colors.blue),
+                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                ))),
+                      ),
+                       Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                            elevation: 3.0,
+                            child: TextFormField(
+                                
+                                validator: (val) {
+                                  if (val.isEmpty) {
+                                    return "Cannot Be Empty";
+                                  }
+                                },
+                                controller: snapshot.firstname,
+                                decoration: InputDecoration(
+                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10),
+                                  labelText: "Firstname",
+                                  icon: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.people_alt,
+                                        color: Colors.blue),
+                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                ))),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                            elevation: 3.0,
+                            child: TextFormField(
+                                
+                                validator: (val) {
+                                  if (val.isEmpty) {
+                                    return "Cannot Be Empty";
+                                  }
+                                },
+                                controller: snapshot.lastname,
+                                decoration: InputDecoration(
+                                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                  labelText: "Lastname",
+                                  icon: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.people_alt,
+                                        color: Colors.blue),
+                                  ),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                ))),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)
                         ),
-                  SizedBox(height: 20,),
-                       
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+                        child: SearchChoices.single(
+                        items: controller.itemsuck,
+                        hint: "Select Resort",
+                        searchHint: "Search Resort",
+                        value: snapshot.resorT.value,
+                        onChanged: (value) async{
+                          snapshot.getResortName(value);
+                        },
+                        dialogBox: false,
+                        isExpanded: true,
+                        menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
+                      ),
+                      )
+                      // Padding(
+                      //         padding: const EdgeInsets.all(20),
+                      //         child: Card(
+                      //         shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.all(Radius.circular(10))),
+                      //           elevation: 3.0,
+                      //           child: Padding(
+                      //             padding: const EdgeInsets.all(5.0),
+                      //             child: SelectFormField(
+                      //             type: SelectFormFieldType.dropdown,
+                      //             controller: snapshot.resortname,
+                      //             labelText: 'Select Resort',
+                      //             items: controller.itemsuck,
+                      //             onChanged: (val){
+                
+                      //             },
+                                  
+                      //         ),
+                      //           )
+                      //         ),
+                      //       ),
+                  
+                           
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+              
+        );
       },)
       
     );

@@ -100,7 +100,7 @@ final String details;
                                                 SizedBox(width: 10,),
                                                 Text("${doc['Confirmation'].toString()}", style:TextStyle(
                                                 fontFamily: 'glee',
-                                                color: Colors.red,
+                                                color: doc['Confirmation'].toString().contains("false") ?Colors.red :Colors.green,
                                                 fontSize: 12,
                                                 ) ),
                                                   ],

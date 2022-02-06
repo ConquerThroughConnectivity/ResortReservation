@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/colors/icons.dart';
@@ -8,7 +7,8 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:expansion_card/expansion_card.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 
 class ResortList extends StatelessWidget {
   @override
@@ -169,14 +169,32 @@ class ResortList extends StatelessWidget {
                                                       ),
                                                     ),
                                                     IconButton(onPressed: (){
-                                                    controller.db.collection("Resorts").doc(document['userID']).delete().then((value){
-                                                      Get.snackbar("Resort", "Resort Delete Succefull", backgroundColor: AppColors.lighgrey, snackPosition: SnackPosition.BOTTOM);
-                                                    });
-                                                    controller.db.collection("Users").where("resortName", isEqualTo: document['resortname']).get().then((value){
-                                                      for(DocumentSnapshot ds in value.docs){
-                                                       ds.reference.delete();
-                                                      }                                                           
-                                                    });
+                                                        Alert(
+                                                        context: context,
+                                                        type: AlertType.error,
+                                                        title: "Deletion",
+                                                        desc: "Are you sure to delete",
+                                                        buttons: [
+                                                          DialogButton(
+                                                            child: Text(
+                                                              "Confirm",
+                                                              style: TextStyle(color: Colors.white, fontSize: 20),
+                                                            ),
+                                                            onPressed: ()async{
+                                                            controller.db.collection("Resorts").doc(document['userID']).delete().then((value){
+                                                            Get.snackbar("Resort", "Resort Delete Succefull", backgroundColor: AppColors.lighgrey, snackPosition: SnackPosition.BOTTOM);
+                                                            });
+                                                            controller.db.collection("Users").where("resortName", isEqualTo: document['resortname']).get().then((value){
+                                                            for(DocumentSnapshot ds in value.docs){
+                                                            ds.reference.delete();
+                                                            }                                                           
+                                                          });
+                                                          Get.back();
+                                                            },
+                                                            width: 120,
+                                                          )
+                                                        ],
+                                                      ).show();
                                                     }, icon: Image.asset(AppIcons.removeResort)),
                                                   ],
                                                 ),

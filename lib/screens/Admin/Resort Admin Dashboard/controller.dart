@@ -26,9 +26,29 @@ class ResortAdminController extends GetxController{
   Stream<QuerySnapshot<Object>> getReservation(String resortID){
   return db.collection("Reservation").where("resortname", isEqualTo: resortID).snapshots();
   }
+  Stream<QuerySnapshot<Object>> getResort(String resortname){
+  return db.collection("Resorts").where("resortname", isEqualTo: resortname).snapshots();
+  }
 
 
-
+updateResortLimit({String reservationID, String limit}){
+  var collection = FirebaseFirestore.instance.collection('Resorts');
+  collection.doc(reservationID).update(
+    {
+    'resortlimit' : limit,
+    }) 
+    .then((_) {
+      Get.snackbar("Booking Confirmed", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
+          margin: EdgeInsets.all(15),
+          padding: EdgeInsets.all(20),
+          colorText: Colors.white,
+          dismissDirection: SnackDismissDirection.HORIZONTAL,
+          snackPosition: SnackPosition.TOP);
+    })
+    .catchError((error){
+   print(error);
+    });
+}
 
  updateFields({String reservationID}){
   var collection = FirebaseFirestore.instance.collection('Reservation');
@@ -37,7 +57,7 @@ class ResortAdminController extends GetxController{
     'Confirmation' : true,
     }) 
     .then((_) {
-      Get.snackbar("Booking Confirmed", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
+      Get.snackbar("Update Success", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
           margin: EdgeInsets.all(15),
           padding: EdgeInsets.all(20),
           colorText: Colors.white,

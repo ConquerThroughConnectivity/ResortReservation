@@ -2,7 +2,7 @@ import 'package:ResortReservation/colors/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
+
 
 class UserController extends GetxController{
 
@@ -19,7 +19,39 @@ class UserController extends GetxController{
   var password ="".obs;
   var firstname ="".obs;
   var lastname ="".obs;
+  var finalDate =0.obs;
+  var counter =0.obs;
 
+  Rx<TextEditingController> dateFrom =TextEditingController().obs;
+  Rx<TextEditingController> dateTo =TextEditingController().obs;
+
+  TextEditingController stayIn =TextEditingController();
+  TextEditingController persons =TextEditingController();
+
+   final List<Map<String, dynamic>> items = [
+    {
+      'value': 'DayTour',
+      'label': 'DayTour',
+      'icon': Icon(Icons.tour),
+      'textStyle': TextStyle(color: Colors.black54),
+    },
+    {
+      'value': 'NightTour',
+      'label': 'NightTour',
+      'icon': Icon(Icons.tour_outlined),
+      'textStyle': TextStyle(color: Colors.black54),
+    },
+    {
+      'value': 'Overnight',
+      'label': 'Overnight',
+      'icon': Icon(Icons.nightlife),
+      'textStyle': TextStyle(color: Colors.black54),
+    },
+  ];
+  getCounter(int val){
+    counter =val.obs;
+    update();
+  }
 
   getEmail(String val){
     email =val.obs;
@@ -41,6 +73,10 @@ class UserController extends GetxController{
     update();
   }
 
+  getDaysTotal(date1, date2){
+     finalDate=date2.difference(date1).inDays;
+     update();
+  }
 
 
 List<dynamic> amentiesAdd =[].obs;
@@ -56,6 +92,9 @@ addAmenties(String value){
   amentiesAdd.add(value);
   update();
 }
+Stream<QuerySnapshot<Object>> getResort1(String userID){
+  return db.collection("Resorts").where("userID", isEqualTo: userID).snapshots();
+}
 Stream<QuerySnapshot<Object>> mybookings(String userID){
   return db.collection("Reservation").where("userID", isEqualTo: userID).snapshots();
 }
@@ -68,13 +107,13 @@ updateFields({String email, String firstname, String lastname, String password, 
   update();
   var collection = FirebaseFirestore.instance.collection('Users');
   collection.doc(userID).update(
-    {'email' : email,
+    {
+    'email' : email,
     'firstname':firstname,
     'lastname':lastname,
     'password':password
-    }) 
-    .then((_) {
-      Get.snackbar("Profile Update", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
+    }) .then((_) {
+          Get.snackbar("Profile Update", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
           margin: EdgeInsets.all(15),
           padding: EdgeInsets.all(20),
           colorText: Colors.white,
@@ -82,8 +121,34 @@ updateFields({String email, String firstname, String lastname, String password, 
           snackPosition: SnackPosition.TOP);
     isUpdateProfile =false.obs;
     update();
-    })
-    .catchError((error){
+    }).catchError((error){
+    Get.snackbar("Warning", "Error!", backgroundColor: AppColors.cardRed,
+       margin: EdgeInsets.all(15),
+       padding: EdgeInsets.all(20),
+       dismissDirection: SnackDismissDirection.HORIZONTAL,
+       barBlur: 2.5, snackPosition: SnackPosition.BOTTOM, colorText: Colors.white);
+       isUpdateProfile =false.obs;
+       update();
+    });
+}
+
+limitation({String total, String resortID}){
+  isUpdateProfile =true.obs;
+  update();
+  var collection = FirebaseFirestore.instance.collection('Resorts');
+  collection.doc(resortID).update(
+    {
+    'resortlimit' : total,
+    }) .then((_) {
+          Get.snackbar("Reserve Success", "Success", backgroundColor: AppColors.green, barBlur: 2.5,
+          margin: EdgeInsets.all(15),
+          padding: EdgeInsets.all(20),
+          colorText: Colors.white,
+          dismissDirection: SnackDismissDirection.HORIZONTAL,
+          snackPosition: SnackPosition.TOP);
+    isUpdateProfile =false.obs;
+    update();
+    }).catchError((error){
     Get.snackbar("Warning", "Error!", backgroundColor: AppColors.cardRed,
        margin: EdgeInsets.all(15),
        padding: EdgeInsets.all(20),
@@ -96,7 +161,7 @@ updateFields({String email, String firstname, String lastname, String password, 
 
 
 
-Future<void> book(String userID, List<dynamic> amenties,String total, String resortID, String resortname, String resortdetails) async {
+Future<void> book(String userID, List<dynamic> amenties,String total, String resortID, String resortname, String resortdetails, String dateFrom, String dateTo, String stay, String persons) async {
     isLoad =true.obs;
     update();
       final collRef = FirebaseFirestore.instance.collection('Reservation');
@@ -110,6 +175,10 @@ Future<void> book(String userID, List<dynamic> amenties,String total, String res
         'resortID':resortID,
         'resortname':resortname,
         'resortdetails':resortdetails,
+        'date-from':dateFrom,
+        'date-to':dateTo,
+        'persons':persons,
+        'stay-in':stay,
         'Confirmation':false,
       })).then((value){
           Get.snackbar("Success", "Booking Success", backgroundColor: AppColors.green, barBlur: 2.5,
@@ -126,7 +195,7 @@ Future<void> book(String userID, List<dynamic> amenties,String total, String res
       
       
     } catch (e) {
-      Get.snackbar("Warning", "Error!", backgroundColor: AppColors.cardRed,
+      Get.snackbar(e, "Error!", backgroundColor: AppColors.cardRed,
        margin: EdgeInsets.all(15),
        padding: EdgeInsets.all(20),
        dismissDirection: SnackDismissDirection.HORIZONTAL,
@@ -178,21 +247,22 @@ Future<void> book(String userID, List<dynamic> amenties,String total, String res
     // print("ReviewID: ${list.docs[c]['reviewID']}");
     // print("Comment ${list.docs[c]['comment']}");
   Query col=  db.collection("Users").where("userID", isEqualTo: list.docs[c]['userID']);
+
   QuerySnapshot co1=  await FirebaseFirestore.instance.collection("Resorts").get();
   final user =await col.get(); 
    final List<DocumentSnapshot> documents = co1.docs;
     if(documents[0]['userID'] ==list.docs[c]['resortID']){
        for(int z= 0;z<user.size;z++){
+         
          listreviews ={
            "Firstname":user.docs[z]['firstname'],
            "Lastname":user.docs[z]['lastname'],
            "Comment":list.docs[c]['comment'],
            "Photo":user.docs[z]['photo'],
-           "Rating":list.docs[c]['rating']
+           "Rating":list.docs[c]['rating'],
          };  
          addReviews.add(listreviews);
-      
-  }
+      }
    }
   
   
@@ -206,6 +276,7 @@ Future<void> book(String userID, List<dynamic> amenties,String total, String res
     isLoad =true.obs;
     update();
   }
+
   isBookFalse(){
     isLoad =false.obs;
     update();
@@ -215,6 +286,7 @@ Future<void> book(String userID, List<dynamic> amenties,String total, String res
     total +=num;
     update();
   }
+
   reset(){
     total =0.obs;
     update();

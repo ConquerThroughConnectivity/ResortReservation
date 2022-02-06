@@ -5,7 +5,9 @@ import 'package:ResortReservation/colors/icons.dart';
 import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/Profile.dart';
 import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/Reservation.dart';
 import 'package:ResortReservation/screens/Admin/view.dart';
+import 'package:ResortReservation/screens/User/StorageService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +29,7 @@ class AdminController extends GetxController {
   final isLoop = 3.obs;
   var isSaved = false.obs;
   var isResortLogin = false.obs;
+  Rx<String> resorT ="".obs;
   List<TextEditingController> shabu = [];
   List<Widget> controllers = [];
 
@@ -38,10 +41,11 @@ class AdminController extends GetxController {
 
   List<XFile> images = <XFile>[].obs;
   List<String> downloadUrls = <String>[].obs;
-  List<Map<String, dynamic>> itemsuck = <Map<String, dynamic>>[].obs;
+  List<DropdownMenuItem<dynamic>> itemsuck = <DropdownMenuItem<dynamic>>[].obs;
 
   final pagecontroller = PageController();
   final selectedImage = 0.obs;
+
 
   TextEditingController title = new TextEditingController();
   TextEditingController description = new TextEditingController();
@@ -53,6 +57,7 @@ class AdminController extends GetxController {
   TextEditingController resortcontact = new TextEditingController();
   TextEditingController resorttype = new TextEditingController();
   TextEditingController entrancefee = new TextEditingController();
+  TextEditingController limitations = new TextEditingController();
 
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
@@ -83,7 +88,6 @@ class AdminController extends GetxController {
       'textStyle': TextStyle(color: Colors.black54),
     },
   ];
-
   void pickImages() async {
     try {
       final selectedImage = await ImagePicker().pickMultiImage();
@@ -92,6 +96,11 @@ class AdminController extends GetxController {
     } on PlatformException catch (e) {
       print(e.message);
     }
+  }
+
+  void getResortName(String value)async{
+    resorT =value.obs;
+    update();
   }
 
   // isonTop
@@ -153,6 +162,7 @@ class AdminController extends GetxController {
           'resorttype': resorttype.text,
           'resortphoto': downloadUrls,
           'resortamenties': amendamenties,
+          'resortlimit':limitations.text,
           'resortdetails':resortdetails.text,
           'userID': insert.id,
         }))
@@ -218,7 +228,7 @@ class AdminController extends GetxController {
         'lastname': lastname.text,
         'tags': "resortadmin#",
         // 'photo':urlDownload,
-        'resortName': resortname.text,
+        'resortName': resorT.value.toString(),
         'userID': users.id
       }))
           .then((value) {
@@ -270,13 +280,22 @@ class AdminController extends GetxController {
       CollectionReference col1 =FirebaseFirestore.instance.collection('Resorts');
       final list = await col1.get();
       for (int c = 0; c < list.size; c++) {
-        List<Map<String, dynamic>> itemss = [
-          {
-            'value': list.docs[c]['resortname'],
-            'label': list.docs[c]['resortname'],
-            'icon': list.docs[c]['resorttype'] =="Pool"? Icon(Icons.pool):Icon(Icons.beach_access_outlined),
-            'textStyle': TextStyle(color: Colors.black54),
-          },
+        List<DropdownMenuItem<dynamic>> itemss = [
+
+          DropdownMenuItem(
+            value: list.docs[c]['resortname'],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                  Text(list.docs[c]['resortname'], style: TextStyle(
+                    fontFamily: 'SFS',
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),),
+                 list.docs[c]['resorttype'] =="Pool"? Icon(Icons.pool):Icon(Icons.beach_access_outlined),
+              ],
+              
+            )),
         ];
         itemsuck.addAll(itemss);
       }
@@ -287,25 +306,40 @@ class AdminController extends GetxController {
       print(e);
     }
   }
-  showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context){
     // set up the button
     Widget okButton = TextButton(
       child: Text("Save"),
-      onPressed: () {
-        String concat ="\n Title: ${title.text} \n Description: ${description.text} \n Price: ${price.text} \n Quantity: ${quantity.text}";
+      onPressed: ()async {
+        String concat ="\n Title: ${title.text} \n Description: ${description.text} \n Price: ${price.text}";
         List<String> add = [concat];
-       
+
+       try{
+        UploadTask task;
+        task =FirebaseFileStore.uploadFile('files/$selectedImagePath', File(selectedImagePath.value));
         amenities.addAll(add);
+         if(task ==null){
+          return;
+          }
+        final snapshots =await task.whenComplete(() {
+        });
+        final urlDownload =await snapshots.ref.getDownloadURL();
+        
         classics = {
           "Title": title.text,
           "Description": description.text,
           "Price": price.text,
-          "Quantity":quantity.text,
+          "Photo":urlDownload,
         };
 
         amendamenties.add(classics);
         print(amendamenties);
         Navigator.pop(context);
+
+       }catch(e){
+         print(e);
+       }
+        
       },
     );
     // set up the AlertDialog
@@ -415,35 +449,59 @@ class AdminController extends GetxController {
                       focusedBorder: InputBorder.none,
                     ))),
                     SizedBox(height: 20,),
-                Expanded(
+                    InkWell(
+                          onTap: () {
+                                getImage(ImageSource.gallery, context);
+                          },
+                          child: Center(
+                            child: Obx(() =>selectedImagePath.value == ''? Image.asset(AppIcons.addImage,
+                                              fit: BoxFit.cover,
+                                              height: 50,
+                                              width: 50)
+                                          : Container(
+                                              height: 150,
+                                              width: 150,
+                                              
+                                              child: ClipRRect(
+                                                
+                                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                child: Image.file(
+                                                  File(selectedImagePath.value),
+                                                  fit: BoxFit.cover,
+                                                  filterQuality: FilterQuality.high,
+                                                ),
+                                              ),
+                                            )))),
+                // Expanded(
                   
-                  child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  elevation: 3.0,
-                  child: TextFormField(
-                      keyboardType: TextInputType.number,
+                //   child: Card(
+                //   shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.all(Radius.circular(10))),
+                //   elevation: 3.0,
+                //   child: TextFormField(
+                //       keyboardType: TextInputType.number,
                    
-                      maxLines: 1,
-                      validator: (val) {
-                        if (val.isEmpty) {
-                          return "Cannot Be Empty";
-                        }
-                      },
-                      controller: quantity,
-                      decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        labelText: "Quantity",
-                        icon: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.production_quantity_limits,
-                              color: Colors.blue),
-                        ),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                      ))),
-                ),
+                //       maxLines: 1,
+                //       validator: (val) {
+                //         if (val.isEmpty) {
+                //           return "Cannot Be Empty";
+                //         }
+                //       },
+                //       controller: quantity,
+                //       decoration: InputDecoration(
+                //         floatingLabelBehavior: FloatingLabelBehavior.auto,
+                //         contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                //         labelText: "Quantity",
+                //         icon: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: Icon(Icons.production_quantity_limits,
+                //               color: Colors.blue),
+                //         ),
+                //         border: InputBorder.none,
+                //         focusedBorder: InputBorder.none,
+                //       ))),
+                // ),
+
                     SizedBox(height: 20,),
           ],
         ),
@@ -500,6 +558,7 @@ class AdminController extends GetxController {
           colorText: Colors.white);
     }
   }
+
    GetBar ErrorSnackBar({String title = 'Error', String message}) {
     Get.log("[$title] $message", isError: true);
     return GetBar(
@@ -531,4 +590,5 @@ class AdminController extends GetxController {
       duration: Duration(seconds: 5),
     );
   }
+  
 }

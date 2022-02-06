@@ -1,9 +1,10 @@
-import 'dart:async';
+
+import 'dart:developer';
 
 import 'package:ResortReservation/colors/colors.dart';
 import 'package:ResortReservation/colors/icons.dart';
+import 'package:ResortReservation/screens/User/Dashboard/Ticket.dart';
 import 'package:ResortReservation/screens/User/Dashboard/controller.dart';
-import 'package:ResortReservation/screens/User/Dashboard/service/Messages.dart';
 import 'package:ResortReservation/screens/User/Dashboard/widgets/cardDescription.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -11,9 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:number_inc_dec/number_inc_dec.dart';
+import 'package:select_form_field/select_form_field.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:tab_container/tab_container.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+FocusNode _focusNode = FocusNode();
+
 class ResortDetails extends GetView<UserController> {
   final List<dynamic> photos;
   final List<dynamic> amenties;
@@ -25,7 +32,8 @@ class ResortDetails extends GetView<UserController> {
   final String contact;
   final String type;
   final String userID;
-  ResortDetails(this.photos, this.resortname, this.address, this.fee, this.resortID, this.details, this.contact, this.type, this.amenties, this.userID);
+  final String limitation;
+  ResortDetails(this.photos, this.resortname, this.address, this.fee, this.resortID, this.details, this.contact, this.type, this.amenties, this.userID, this.limitation);
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +41,31 @@ class ResortDetails extends GetView<UserController> {
    return GetBuilder<UserController>(
      init: UserController(),
      builder: (snapshots){
-      double total =0.0;
+     snapshots.getReview(resortID: resortID);
+  
+    
+      
+     final format = DateFormat("yyyy-MM-dd");
+     double total =0.0;
      for(int z=0;z<snapshots.addReviews.length;z++){
        print(snapshots.addReviews.length);
        total =(total + double.parse(snapshots.addReviews[z]['Rating']) /5);
      }
+     print("Held: ${snapshots.addReviews.length}");
      List<S2Choice<String>> held =[];
+
        for(int z=0;z<amenties.length;z++){
          held.add(S2Choice<String>(value: amenties[z]['Price'], title: "\n ${amenties[z]['Title'].toString()} \n ${amenties[z]['Description'].toString()} \n ${amenties[z]['Price'].toString()}")); 
       }
+
+
       final ago = new DateTime.now();
       print(snapshots.addReviews);
+
+
+     
+    
+
       return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -60,15 +82,15 @@ class ResortDetails extends GetView<UserController> {
           color: Colors.black
         ),),
         actions: [
-           IconButton(onPressed: (){
-             Get.to(()=>Messages(
-               url: photos[0],
-               userID: userID,
-               resortname: resortname,
-               resortID: resortID,
-             ));
-             }, 
-             icon: Icon(Icons.message, color: Colors.black)),
+          //  IconButton(onPressed: (){
+          //    Get.to(()=>Messages(
+          //      url: photos[0],
+          //      userID: userID,
+          //      resortname: resortname,
+          //      resortID: resortID,
+          //    ));
+          //    }, 
+          //    icon: Icon(Icons.message, color: Colors.black)),
         ],
         
       ),
@@ -88,9 +110,10 @@ class ResortDetails extends GetView<UserController> {
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     onPressed: ()async{
-                      if(snapshots.amentiesAdd.length ==0){
+                      if(int.parse(limitation) >0){
+                        if(snapshots.amentiesAdd.length ==0 || snapshots.dateFrom.value.text.isEmpty || snapshots.dateTo.value.text.isEmpty || snapshots.stayIn.text.isEmpty || snapshots.persons.text =="0"){
                       Get.snackbar(
-                        "Please Select Amenties", "Error!", 
+                        "Please Input Required Fields", "Error!", 
                         backgroundColor: AppColors.cardRed, 
                         barBlur: 1.0, 
                         dismissDirection: SnackDismissDirection.HORIZONTAL,
@@ -98,7 +121,32 @@ class ResortDetails extends GetView<UserController> {
                         margin: EdgeInsets.all(20),
                         snackPosition: SnackPosition.TOP, colorText: Colors.white);
                       }else{
-                        snapshots.book(userID, snapshots.amentiesAdd, snapshots.total.value.toString(), resortID, resortname, details);
+                      final date1 =DateTime.parse(snapshots.dateFrom.value.text);
+                      final date2 =DateTime.parse(snapshots.dateTo.value.text);
+                      int finalDate=date2.difference(date1).inDays;
+                      Get.to(()=>Receipt(
+                        userID: userID,
+                        amenties: snapshots.amentiesAdd,
+                        total: (snapshots.total.value + int.parse(fee) + (snapshots.total.value * finalDate)).toString(),
+                        resortID: resortID,
+                        resortname: resortname,
+                        details: details,
+                        dateFrom: snapshots.dateFrom.value.text,
+                        dateTo: snapshots.dateTo.value.text,
+                        stayin: snapshots.stayIn.text,
+                        persons: snapshots.persons.text,
+
+                      ));
+                      }
+                      }else{
+                         Get.snackbar(
+                        "This Resort is fully Book", "Error!", 
+                        backgroundColor: AppColors.cardRed, 
+                        barBlur: 1.0, 
+                        dismissDirection: SnackDismissDirection.HORIZONTAL,
+                        padding: EdgeInsets.all(15),
+                        margin: EdgeInsets.all(20),
+                        snackPosition: SnackPosition.TOP, colorText: Colors.white);
                       }
                     },
                     child: Text(
@@ -182,8 +230,9 @@ class ResortDetails extends GetView<UserController> {
                       ),
           SizedBox(height: 20,),
           Container(
-          height: MediaQuery.of(context).size.height / 2* 3.9,
+          height: MediaQuery.of(context).size.height / 2* 4.6,
           child: TabContainer(
+            enabled: true,
             transitionBuilder: (child, animation) {
             animation = CurvedAnimation(curve: Curves.easeIn, parent: animation);
             return SlideTransition(
@@ -277,7 +326,13 @@ class ResortDetails extends GetView<UserController> {
                          ),),
                        ),
                      ),
-                     Container(
+                    GetBuilder<UserController>(
+                      init: UserController(),
+                      builder: (snaps){
+                      
+                  
+                        return  Container(
+                    
                        padding: EdgeInsets.all(14),
                        child: Card(
                          color: AppColors.cardLightMaroon,
@@ -324,7 +379,117 @@ class ResortDetails extends GetView<UserController> {
                       }
                     ),
                  ),
-      
+                 
+                Container(
+                   margin: EdgeInsets.all(10),
+                   padding: EdgeInsets.all(5),
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(10),
+                     color: AppColors.background
+                   ),
+                   child: DateTimeField(
+                     controller: snapshots.dateFrom.value,
+                     decoration: InputDecoration(
+                       border: InputBorder.none,
+                       labelText: "Date From"
+                     ),
+                  format: format,
+                  onShowPicker: (context, currentValue) async {
+                    return showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2100));
+                    
+                  },
+                ),
+                 ),
+                  Container(
+                   margin: EdgeInsets.all(10),
+                   padding: EdgeInsets.all(5),
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(10),
+                     color: AppColors.background
+                   ),
+                   child: DateTimeField(
+                     controller: snapshots.dateTo.value,
+                     decoration: InputDecoration(
+                       border: InputBorder.none,
+                       labelText: "Date To"
+                     ),
+                  format: format,
+                  onShowPicker: (context, currentValue) async {
+                    return showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2100));
+                    
+                  },
+                ),
+                 ),
+                 GetBuilder<UserController>(
+                   init: UserController(),
+                   builder: (snaps){
+                    return Container(
+                   height: 70,
+                   margin: EdgeInsets.all(10),
+                   padding: EdgeInsets.all(5),
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(10),
+                     color: AppColors.background
+                   ),
+                   
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,                      
+                        children: [
+                        Text("Persons ", style: TextStyle(
+                        fontFamily: 'SFS',
+                      
+                        fontSize: 15
+                      ),),
+                      SizedBox(width: 40,),
+                      Container(
+                        height: 70,
+                        width: 90,
+                        child: NumberInputWithIncrementDecrement(
+                        controller: snapshots.persons,
+                        min: 0,
+                        max: 100,
+                      ),
+                      )
+                   
+                   
+                      ],)
+                    );
+                 }),
+                     Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Card(
+                              
+                            color: AppColors.background,
+                            shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                            elevation: 3.0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: SelectFormField(
+                                   decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Stay In'),
+                                focusNode: _focusNode,
+                                type: SelectFormFieldType.dropdown,
+                                controller: snapshots.stayIn,
+                        
+                                items: snapshots.items,
+                                onChanged: (val){
+                                   
+                                },
+                                
+                            ),
+                              )
+                            ),
+                          ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -344,7 +509,7 @@ class ResortDetails extends GetView<UserController> {
                             padding: EdgeInsets.all(5),
                             margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),
-                            child: Text("${snapshots.amentiesAdd[index]}",
+                            child: Text("${snaps.amentiesAdd[index]}",
                               style: TextStyle(
                               fontFamily: 'SFS',
                               fontWeight: FontWeight.bold,
@@ -365,7 +530,7 @@ class ResortDetails extends GetView<UserController> {
                           color: AppColors.background
                         ),
                         child: Center(
-                          child: Text('Total: ${snapshots.total.value}', style: TextStyle(
+                          child: Text('SubTotal: ${snaps.total.value + int.parse(fee)}', style: TextStyle(
                             fontFamily: 'glee',
                             fontSize: 12
                           ),),
@@ -375,7 +540,8 @@ class ResortDetails extends GetView<UserController> {
                    
                     ],)
                        ),
-                     ),
+                     );
+                    })
                      
                       ],
                     ),
@@ -383,6 +549,7 @@ class ResortDetails extends GetView<UserController> {
                   //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details //Details 
 
                //Reviews   //Reviews  //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews //Reviews 
+              
                 Container(
                   margin: EdgeInsets.all(20),
                   child: Column(
@@ -409,7 +576,7 @@ class ResortDetails extends GetView<UserController> {
                       Container(
                         height: 500,
                         child: ListView.builder(
-                        itemCount: snapshots.addReviews.length ,
+                        itemCount: snapshots.addReviews.length,
                         itemBuilder: (context,index){  
                             return Container(
                               margin: EdgeInsets.all(10),

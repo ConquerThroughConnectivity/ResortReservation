@@ -17,8 +17,6 @@ TextEditingController firstname = new TextEditingController();
 TextEditingController lastname = new TextEditingController();
 
   FirebaseFirestore firestore;
-  
- 
   var selectedImagePath = ''.obs;
   var selectedImageSize = ''.obs;
 
@@ -78,7 +76,6 @@ TextEditingController lastname = new TextEditingController();
         'photo':urlDownload,
         'userID':users.id,
         })).then((value){
-
           Get.snackbar("Success", "Email Register Sucess", backgroundColor: AppColors.cardLightMaroon, barBlur: 2.5, snackPosition: SnackPosition.BOTTOM);
           isLogin =false.obs;
           update();
@@ -111,11 +108,6 @@ TextEditingController lastname = new TextEditingController();
 
     }
   }
-
-
-
-
-
   void getImage(ImageSource imageSource, BuildContext context) async {
     final picked = await ImagePicker().pickImage(source: imageSource);
     if (picked != null) {

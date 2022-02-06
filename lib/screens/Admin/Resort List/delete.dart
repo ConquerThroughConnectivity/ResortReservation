@@ -1,23 +1,16 @@
 import 'package:ResortReservation/colors/colors.dart';
-import 'package:ResortReservation/screens/Admin/Resort%20Admin%20Dashboard/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-class Confirmation extends StatelessWidget {
+class LogoutConfirmation extends StatelessWidget {
   
-  final String reservationID;
-  final String userID;
-  final String total;
-  const Confirmation({Key key, this.reservationID, this.userID, this.total}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ResortAdminController>(
-      init: ResortAdminController(),
-      builder: (snapshots){
-        return Container(
+    return Container(
       height: 220,
       decoration: BoxDecoration(
         color: AppColors.background,
@@ -47,7 +40,7 @@ class Confirmation extends StatelessWidget {
             ),
           ),
           Text(
-            "Confirmed Booking ?".tr,
+            "Are you sure to logout?".tr,
             style:TextStyle(
               fontFamily: 'SFS',
               fontSize: 20,
@@ -57,9 +50,16 @@ class Confirmation extends StatelessWidget {
           
             BlockButtonWidget(
             onPressed: () async {
-              snapshots.updateFields(reservationID: reservationID);
-              snapshots.updateResortLimit(reservationID: userID, limit: total);
-              Get.back();
+            SharedPreferences pref = await SharedPreferences.getInstance();
+            pref.remove("userfirstname");
+            pref.remove("userlastname");
+            pref.remove("useremail");
+            pref.remove("userphoto");
+            pref.remove("userpassword");
+            pref.remove("userUserID");
+            pref.remove("userisLogin");
+            pref.clear();
+             Get.offAndToNamed("/login");
             },
             color: Colors.white,
             text: Text(
@@ -73,7 +73,6 @@ class Confirmation extends StatelessWidget {
         ],
       ),
     );
-    });
   }
 }
 

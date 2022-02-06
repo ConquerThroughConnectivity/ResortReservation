@@ -102,7 +102,7 @@ import 'package:textfield_tags/textfield_tags.dart';
                               ),),
                               SizedBox(height: 15,),
                               Obx((){
-                                return controller.images.isEmpty ?Image.asset(AppIcons.addImage, fit: BoxFit.cover,)
+                                return controller.images.isEmpty? Image.asset(AppIcons.addImage, fit: BoxFit.cover,)
                                 :Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -308,6 +308,39 @@ import 'package:textfield_tags/textfield_tags.dart';
                             shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10))),
                               elevation: 3.0,
+                              child: TextFormField(
+                                
+                              keyboardType: TextInputType.number,
+                              maxLines: 1,
+                              validator: (val){
+                                if(val.isEmpty){
+                                  return "Cannot Be Empty";
+                                }
+                              },
+                              controller: controller.limitations,
+                              decoration: InputDecoration(
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                            
+                              labelText: "Resort Limitations",
+                              icon: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.production_quantity_limits, color: Colors.blue),
+                              ),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none
+                              
+                              
+                                )
+                              )
+                            ),
+                          ),
+                           Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Card(
+                            shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                              elevation: 3.0,
                               child: Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: SelectFormField(
@@ -348,7 +381,7 @@ import 'package:textfield_tags/textfield_tags.dart';
                                    child: ListView.builder(
                                      itemCount: controller.amenities.length,
                                      itemBuilder: (context, index){
-                                      return  Container(
+                                      return Container(
                                               margin: EdgeInsets.all(20),
                                               height: 200,
                                               child: Card(

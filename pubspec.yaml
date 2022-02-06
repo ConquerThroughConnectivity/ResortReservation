@@ -62,6 +62,13 @@ dependencies:
   easy_splash_screen: ^1.0.3
   cloud_functions: ^3.2.5
   chat_bubbles: ^1.1.0
+  search_choices: ^2.0.16
+  rflutter_alert: ^2.0.4
+  ticketview: ^1.0.0
+  datetime_picker_formfield: ^2.0.0
+  qr_flutter: ^4.0.0
+  number_inc_dec: ^0.8.0
+  firebase_messaging: ^11.2.6
   
 dev_dependencies:
   flutter_test:
